@@ -2,6 +2,7 @@ const glob = require('glob')
 const path = require('path')
 const HappyPack = require('happypack')
 const os = require('os')
+const webpack = require('webpack')
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
 const HtmlPlugin = require('html-webpack-plugin')
 const ExtractPlugin = require('extract-text-webpack-plugin')
@@ -48,7 +49,9 @@ module.exports = {
   entry: entries,
   output: {
     path: absolutePath('dist'),
-    filename: "js/[name].[hash:4].js",
+    filename: "js/[name].[chunkhash:6].js",
+    chunkFilename: "js/[name].[chunkhash:6].js",
+    publicPath: "/"
   },
   devServer: {
     contentBase: absolutePath('dist'), //静态文件根目录
@@ -88,6 +91,7 @@ module.exports = {
             loader: 'url-loader',
             options: {
               limit: 8192,
+              name: '[name].[hash:6].[ext]',
               outputPath: 'imgs/'
             }
           }
@@ -125,6 +129,7 @@ module.exports = {
     new CleanPlugin(['dist'],{
       root: absolutePath()
     }),
+    new webpack.HashedModuleIdsPlugin(),
     new HappyPack({
       id: 'happy-babel-js',
       loaders: ['babel-loader?cacheDirectory=true'],
@@ -132,7 +137,7 @@ module.exports = {
     }),
     ...tartHtmls,
     new ExtractPlugin({
-      filename: "css/[name].[hash:4].css"
+      filename: "css/[name].[hash:6].css"
     }),
     new PurifyCSSPlugin({
       paths: glob.sync(absolutePath('src/pages/*/*.html'))
