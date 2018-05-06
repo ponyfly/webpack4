@@ -1,4 +1,8 @@
+
 const p2 = new Promise((resolve, reject) => {
-  resolve(2)
+  resolve('index')
   console.log('has resolved')
+})
+p2.then((val) => {
+  console.log(val)
 })
