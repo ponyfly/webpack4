@@ -6,6 +6,7 @@
   "scripts": {
     "build:prod": "webpack --mode production --config ./build/webpack.config.js",
     "build:dev": "webpack --mode development --config ./build/webpack.config.js",
+    "build:dll": "webpack --mode development --config ./build/webpack.dll.config.js",
     "dev": "webpack-dev-server --mode development --config ./build/webpack.config.js",
     "server": "http-server dist -a 0.0.0.0 -p 9001 -o"
   },
@@ -24,10 +25,10 @@
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.11",
     "happypack": "^5.0.0-beta.4",
+    "html-webpack-include-assets-plugin": "^1.0.4",
     "html-webpack-plugin": "^3.2.0",
     "html-withimg-loader": "^0.1.16",
     "http-server": "^0.11.1",
-    "mini-css-extract-plugin": "^0.4.0",
     "postcss-loader": "^2.1.4",
     "purify-css": "^1.2.5",
     "purifycss-webpack": "^0.7.0",
