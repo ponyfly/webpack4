@@ -131,6 +131,9 @@ module.exports = {
       root: absolutePath(),
       exclude: ["dll"]
     }),
+    new webpack.DefinePlugin({
+      NODE_ENV:JSON.stringify(process.env.NODE_ENV)
+    }),
     new webpack.HashedModuleIdsPlugin(),
     ...tartHtmls,
     new HtmlWebpackIncludeAssetsPlugin({
