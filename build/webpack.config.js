@@ -6,9 +6,12 @@ const webpack = require('webpack')
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
 const HtmlPlugin = require('html-webpack-plugin')
 const ExtractPlugin = require('extract-text-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 const PurifyCSSPlugin = require('purifycss-webpack')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+const chalk = require('chalk')
 
 function absolutePath(otherPath='') {
   return path.resolve(__dirname, '..', otherPath)
@@ -34,7 +37,7 @@ function createHtml(entries) {
     const htmlTempPlugin = new HtmlPlugin({
       template: absolutePath(`src/pages/${name}/index.html`),
       filename:`${name}.html`,
-      chunks: [`runtime~${name}`, name,'vendors', 'utils']
+      chunks: [`runtime~${name}`, name, 'vendor.dll', 'vendors', 'utils']
     })
     tarHtmls.push(htmlTempPlugin)
   })
@@ -127,17 +130,18 @@ module.exports = {
   },
   plugins: [
     new CleanPlugin(['dist'],{
-      root: absolutePath()
+      root: absolutePath(),
+      exclude: ['dll']
     }),
     new webpack.HashedModuleIdsPlugin(),
+    ...tartHtmls,
+    new ExtractPlugin({
+      filename: "css/[name].[hash:6].css"
+    }),
     new HappyPack({
       id: 'happy-babel-js',
       loaders: ['babel-loader?cacheDirectory=true'],
       threadPool: happyThreadPool
-    }),
-    ...tartHtmls,
-    new ExtractPlugin({
-      filename: "css/[name].[hash:6].css"
     }),
     new PurifyCSSPlugin({
       paths: glob.sync(absolutePath('src/pages/*/*.html'))
@@ -155,6 +159,12 @@ module.exports = {
           reduce_vars: true // 提取出出现多次但是没有定义成变量去引用的静态值
         }
       }
+    }),
+    new webpack.DllReferencePlugin({
+      manifest: absolutePath('dist/dll/vendor.manifest.json')
+    }),
+    new ProgressBarPlugin({
+      format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)'
     })
   ]
 }
