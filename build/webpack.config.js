@@ -6,12 +6,12 @@ const webpack = require('webpack')
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
 const HtmlPlugin = require('html-webpack-plugin')
 const ExtractPlugin = require('extract-text-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 const PurifyCSSPlugin = require('purifycss-webpack')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const chalk = require('chalk')
+const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
 
 function absolutePath(otherPath='') {
   return path.resolve(__dirname, '..', otherPath)
@@ -133,8 +133,17 @@ module.exports = {
       root: absolutePath(),
       exclude: ['dll']
     }),
+    new webpack.DefinePlugin({
+      NODE_ENV:JSON.stringify(process.env.NODE_ENV)
+    }),
     new webpack.HashedModuleIdsPlugin(),
     ...tartHtmls,
+    new HtmlWebpackIncludeAssetsPlugin({
+      assets: [
+        'dll/vendor.dll.js'
+      ],
+      append: false
+    }),
     new ExtractPlugin({
       filename: "css/[name].[hash:6].css"
     }),
