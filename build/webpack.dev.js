@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const HtmlPlugin = require('html-webpack-plugin')
 const base = require('./webpack.base')
 const merge = require('webpack-merge')
@@ -30,6 +31,7 @@ module.exports = merge(base, {
     contentBase: utils.absolutePath('dist'), //静态文件根目录
     host: 'localhost',
     port: 9000, // 端口
+    hot: true,
     open: true
   },
   module: {
@@ -52,6 +54,8 @@ module.exports = merge(base, {
     ]
   },
   plugins: [
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
     ...getEntryHtml()
   ]
 })
