@@ -1,0 +1,53 @@
+const HtmlPlugin = require('html-webpack-plugin')
+const base = require('./webpack.base')
+const merge = require('webpack-merge')
+const utils = require('./utils')
+
+function getEntryHtml() {
+  const entries = utils.getEntries('src/pages/*/index.html')
+  let entryHtmls = []
+
+  Object.keys(entries).forEach(name => {
+    entryHtmls.push(new HtmlPlugin({
+      template: entries[name],
+      filename:`${name}.html`,
+      chunks: [name]
+    }))
+  })
+  return entryHtmls
+}
+
+module.exports = merge(base, {
+  mode: 'development',
+  output: {
+    path: utils.absolutePath('dist'),
+    filename: "js/[name].js",
+    chunkFilename: "js/[name].js",
+    publicPath: "/"
+  },
+  devtool: 'cheap-module-eval-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: {
+          loader: 'babel-loader',
+          options:{
+            cacheDirectory: true
+          }
+        },
+        include: utils.absolutePath('src'),
+        exclude: utils.absolutePath('node_modules')
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  },
+  plugins: [
+    ...getEntryHtml()
+  ]
+})
+
+
