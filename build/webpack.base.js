@@ -6,12 +6,6 @@ module.exports = {
   resolve: {
     extensions: ['.js']
   },
-  devServer: {
-    contentBase: utils.absolutePath('dist'), //静态文件根目录
-    host: 'localhost',
-    port: 9000, // 端口
-    open: true
-  },
   module: {
     rules: [
       {
