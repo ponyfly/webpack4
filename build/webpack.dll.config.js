@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const CleanPlugin = require('clean-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -12,6 +13,9 @@ module.exports = {
   },
   // manifest是描述文件
   plugins: [
+    new CleanPlugin(['dist/dll'], {
+      root: path.resolve(__dirname, '..')
+    }),
     new webpack.DllPlugin({
       name: '_dll_[name]',
       path: path.resolve(__dirname, '..' , 'dist/dll/[name].manifest.json')
