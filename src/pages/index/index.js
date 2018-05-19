@@ -20,7 +20,7 @@ const curIndex = arr.findIndex((d) => {
 console.log(curIndex)
 const promise1 = new Promise((resolve, reject) => {
   setTimeout(() => {
-    resolve(1)
+    resolve('i am index 2888dfsad')
   },1000)
 })
 
@@ -29,3 +29,14 @@ promise1.then((val) => {
 }, (err) => {
   console.log(err)
 })
+
+
+
+
+
+
+
+
+if (module.hot) {
+   module.hot.accept()
+}

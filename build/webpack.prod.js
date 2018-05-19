@@ -1,5 +1,4 @@
 const glob = require('glob')
-const path = require('path')
 const HappyPack = require('happypack')
 const os = require('os')
 const webpack = require('webpack')
@@ -9,59 +8,35 @@ const ExtractPlugin = require('extract-text-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 const PurifyCSSPlugin = require('purifycss-webpack')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+const chalk = require('chalk')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
+const merge = require('webpack-merge')
 
-function absolutePath(otherPath='') {
-  return path.resolve(__dirname, '..', otherPath)
-}
+const base = require('./webpack.base')
+const utils = require('./utils')
 
-function getEntries(paths) {
-  const files = glob.sync(paths)
-  let entries = {}
-
-  files.forEach(filePath => {
-    const toArray = filePath.split('/')
-    const fileName = toArray[toArray.length - 2]
-    entries[fileName] = filePath
-  })
-
-  return entries
-}
-
-function createHtml(entries) {
-  let tarHtmls = []
+function getEntryHtml() {
+  const entries = utils.getEntries('src/pages/*/index.html')
+  let entryHtmls = []
 
   Object.keys(entries).forEach(name => {
-    const htmlTempPlugin = new HtmlPlugin({
-      template: absolutePath(`src/pages/${name}/index.html`),
+    entryHtmls.push(new HtmlPlugin({
+      template: entries[name],
       filename:`${name}.html`,
-      chunks: [`runtime~${name}`, name, 'vendor.dll', 'vendors', 'utils']
-    })
-    tarHtmls.push(htmlTempPlugin)
+      chunks: [`runtime~${name}`, name, 'vendors', 'utils']
+    }))
   })
-
-  return tarHtmls
+  return entryHtmls
 }
 
-const entries = getEntries(absolutePath('src/pages/*/index.js'))
-const tartHtmls = createHtml(entries)
-
-module.exports = {
-  entry: entries,
+module.exports = merge(base, {
+  mode: 'production',
   output: {
-    path: absolutePath('dist'),
+    path: utils.absolutePath('dist'),
     filename: "js/[name].[chunkhash:6].js",
     chunkFilename: "js/[name].[chunkhash:6].js",
     publicPath: "/"
-  },
-  devServer: {
-    contentBase: absolutePath('dist'), //静态文件根目录
-    host: 'localhost',
-    port: 9000, // 端口
-    open: true
-  },
-  resolve: {
-    extensions: ['.js']
   },
   module: {
     rules: [
@@ -70,8 +45,8 @@ module.exports = {
         use: {
           loader: 'happypack/loader?id=happy-babel-js', // 增加新的HappyPack构建loader
         },
-        include: absolutePath('src'),
-        exclude: absolutePath('node_modules')
+        include: utils.absolutePath('src'),
+        exclude: utils.absolutePath('node_modules')
       },
       {
         test: /\.css$/,
@@ -82,29 +57,8 @@ module.exports = {
           ],
           publicPath: '../'
         }),
-        include: absolutePath('src'),
-        exclude: absolutePath('node_modules'),
-      },
-      {
-        test: /\.(jpe?g|png|gif)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              name: '[name].[hash:6].[ext]',
-              outputPath: 'imgs/'
-            }
-          }
-        ]
-      },
-      {
-        test: /\.html$/,
-        use: 'html-withimg-loader'
-      },
-      {
-        test: /\.(eot|ttf|woff|svg)$/,
-        use: 'file-loader'
+        include: utils.absolutePath('src'),
+        exclude: utils.absolutePath('node_modules'),
       }
     ]
   },
@@ -128,30 +82,27 @@ module.exports = {
   },
   plugins: [
     new CleanPlugin(['dist'],{
-      root: absolutePath(),
-      exclude: ["dll"]
-    }),
-    new webpack.DefinePlugin({
-      NODE_ENV:JSON.stringify(process.env.NODE_ENV)
+      root: utils.absolutePath(),
+      exclude: ['dll']
     }),
     new webpack.HashedModuleIdsPlugin(),
-    ...tartHtmls,
+    ...getEntryHtml(),
     new HtmlWebpackIncludeAssetsPlugin({
       assets: [
         'dll/vendor.dll.js'
       ],
       append: false
     }),
+    new ExtractPlugin({
+      filename: "css/[name].[hash:6].css"
+    }),
     new HappyPack({
       id: 'happy-babel-js',
       loaders: ['babel-loader?cacheDirectory=true'],
       threadPool: happyThreadPool
     }),
-    new ExtractPlugin({
-      filename: "css/[name].[hash:6].css"
-    }),
     new PurifyCSSPlugin({
-      paths: glob.sync(absolutePath('src/pages/*/*.html'))
+      paths: glob.sync(utils.absolutePath('src/pages/*/*.html'))
     }),
     new WebpackParallelUglifyPlugin({
       uglifyJS: {
@@ -168,7 +119,10 @@ module.exports = {
       }
     }),
     new webpack.DllReferencePlugin({
-      manifest: absolutePath('dist/dll/vendor.manifest.json')
+      manifest: utils.absolutePath('dist/dll/vendor.manifest.json')
+    }),
+    new ProgressBarPlugin({
+      format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)'
     })
   ]
-}
+})

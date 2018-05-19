@@ -1,18 +1,24 @@
 const path = require('path')
 const webpack = require('webpack')
+const CleanPlugin = require('clean-webpack-plugin')
+
 module.exports = {
   entry: {
-    vendor: ['jquery'] //jquery模块打包到一个动态连接库
+    vendor: ['jquery']
   },
   output: {
-    path: path.resolve(__dirname, '..', 'dist'),
-    filename: 'dll/[name].dll.js', //输出动态连接库的文件名称
-    library: '_dll_[name]' //全局变量名称
+    path: path.resolve(__dirname, '..' , 'dist'),
+    filename: 'dll/[name].dll.js',
+    library: '_dll_[name]' // 全局变量名，其他模块会从此变量上获取里面模块
   },
+  // manifest是描述文件
   plugins: [
+    new CleanPlugin(['dist/dll'], {
+      root: path.resolve(__dirname, '..')
+    }),
     new webpack.DllPlugin({
-      name: '_dll_[name]', //和output.library中一致，也就是输出的manifest.json中的 name值
-      path: path.resolve(__dirname, '../dist/dll', '[name].manifest.json')
+      name: '_dll_[name]',
+      path: path.resolve(__dirname, '..' , 'dist/dll/[name].manifest.json')
     })
   ]
 }
