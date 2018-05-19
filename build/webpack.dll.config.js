@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const CleanPlugin = require('clean-webpack-plugin')
 
 module.exports = {
+  mode: 'production',
   entry: {
     vendor: ['jquery']
   },

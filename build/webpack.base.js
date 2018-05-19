@@ -1,4 +1,3 @@
-const webpack = require('webpack')
 const utils = require('./utils')
 
 module.exports = {
@@ -30,10 +29,5 @@ module.exports = {
         use: 'file-loader'
       }
     ]
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      NODE_ENV:JSON.stringify(process.env.NODE_ENV)
-    }),
-  ]
+  }
 }
