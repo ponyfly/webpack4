@@ -54,7 +54,6 @@ module.exports = merge(base, {
     ]
   },
   plugins: [
-    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     ...getEntryHtml()
   ]

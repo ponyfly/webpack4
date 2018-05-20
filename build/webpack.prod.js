@@ -4,9 +4,9 @@ const os = require('os')
 const webpack = require('webpack')
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
 const HtmlPlugin = require('html-webpack-plugin')
-const ExtractPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
-const PurifyCSSPlugin = require('purifycss-webpack')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const chalk = require('chalk')
@@ -50,13 +50,11 @@ module.exports = merge(base, {
       },
       {
         test: /\.css$/,
-        use: ExtractPlugin.extract({
-          use: [
-            {loader: 'css-loader'},
-            {loader: 'postcss-loader'}
-          ],
-          publicPath: '../'
-        }),
+        use: [
+          {loader: MiniCssExtractPlugin.loader},
+          {loader: 'css-loader'},
+          {loader: 'postcss-loader'}
+        ],
         include: utils.absolutePath('src'),
         exclude: utils.absolutePath('node_modules'),
       }
@@ -78,7 +76,10 @@ module.exports = merge(base, {
         }
       }
     },
-    runtimeChunk: true
+    runtimeChunk: true,
+    minimizer: [
+      new OptimizeCSSAssetsPlugin({})
+    ]
   },
   plugins: [
     new CleanPlugin(['dist'],{
@@ -93,18 +94,16 @@ module.exports = merge(base, {
       ],
       append: false
     }),
-    new ExtractPlugin({
-      filename: "css/[name].[hash:6].css"
+    new MiniCssExtractPlugin({
+      filename: "css/[name].[contenthash:6].css",
     }),
     new HappyPack({
       id: 'happy-babel-js',
       loaders: ['babel-loader?cacheDirectory=true'],
       threadPool: happyThreadPool
     }),
-    new PurifyCSSPlugin({
-      paths: glob.sync(utils.absolutePath('src/pages/*/*.html'))
-    }),
     new WebpackParallelUglifyPlugin({
+      cacheDir: utils.absolutePath('tmp'),
       uglifyJS: {
         output: {
           beautify: false, //不需要格式化
