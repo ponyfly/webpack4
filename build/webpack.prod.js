@@ -24,7 +24,7 @@ function getEntryHtml() {
     entryHtmls.push(new HtmlPlugin({
       template: entries[name],
       filename:`${name}.html`,
-      chunks: [`runtime~${name}`, name, 'vendors', 'utils']
+      chunks: [name, 'vendors', 'utils']
     }))
   })
   return entryHtmls
@@ -66,7 +66,7 @@ module.exports = merge(base, {
         vendors: {
           test:  /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'initial'
+          chunks: 'all',
         },
         utils: {
           test: /[\\/]util[\\/]/,
@@ -76,7 +76,7 @@ module.exports = merge(base, {
         }
       }
     },
-    runtimeChunk: true,
+    // runtimeChunk: true,
     minimizer: [
       new OptimizeCSSAssetsPlugin({})
     ]
@@ -88,12 +88,12 @@ module.exports = merge(base, {
     }),
     new webpack.HashedModuleIdsPlugin(),
     ...getEntryHtml(),
-    new HtmlWebpackIncludeAssetsPlugin({
-      assets: [
-        'dll/vendor.dll.js'
-      ],
-      append: false
-    }),
+    // new HtmlWebpackIncludeAssetsPlugin({
+    //   assets: [
+    //     'dll/vendor.dll.js'
+    //   ],
+    //   append: false
+    // }),
     new MiniCssExtractPlugin({
       filename: "css/[name].[contenthash:6].css",
     }),
@@ -117,9 +117,9 @@ module.exports = merge(base, {
         }
       }
     }),
-    new webpack.DllReferencePlugin({
-      manifest: utils.absolutePath('dist/dll/vendor.manifest.json')
-    }),
+    // new webpack.DllReferencePlugin({
+    //   manifest: utils.absolutePath('dist/dll/vendor.manifest.json')
+    // }),
     new ProgressBarPlugin({
       format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)'
     })

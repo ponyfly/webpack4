@@ -1,19 +1,25 @@
 require('./index.css')
-require('./sub')
-require('core-js/fn/array/find-index')
-import $ from 'jquery'
 import {sayUtil} from "../../util/util"
 
+import Vue from 'vue'
 
-$('.red').css({color: '#f6a'}).click(()=> {
-  location.href = '../product.html'
-})
+import {sub} from './sub'
+import {sub2} from './sub2'
 sayUtil()
+
+console.log(sub, sub2)
+
+const vm = new Vue({
+  data: {
+    msg: 'hello world'
+  }
+})
+
 function add(a, b) {
   return a + b
 }
 console.log(add(2,3))
-const arr = [1,2,3,5,0]
+const arr = [1,2,3,5,6]
 const curIndex = arr.findIndex((d) => {
   return d === 2
 })

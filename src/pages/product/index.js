@@ -1,7 +1,8 @@
 require('./index.css')
-require('./sub')
 import $ from 'jquery'
+import {sayUtil} from "../../util/util"
 
+sayUtil()
 $('.red').css({color: '#f6a'})
 const p1 = Promise.resolve(1)
 console.log('start')
