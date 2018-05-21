@@ -1,1 +1,2 @@
-export const sub2 = 'sub2'
+import {sayUtil} from "../../util/util"
+export default sayUtil

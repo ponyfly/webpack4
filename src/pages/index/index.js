@@ -2,12 +2,11 @@ require('./index.css')
 import {sayUtil} from "../../util/util"
 
 import Vue from 'vue'
-
+import sub2 from './sub2'
 import {sub} from './sub'
-import {sub2} from './sub2'
 sayUtil()
-
-console.log(sub, sub2)
+sub2()
+console.log(sub)
 
 const vm = new Vue({
   data: {

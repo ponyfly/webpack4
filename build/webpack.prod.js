@@ -63,18 +63,19 @@ module.exports = merge(base, {
   optimization: {
     splitChunks: {
       cacheGroups: {
+        common: {
+          name: 'common',
+          chunks:'initial',
+          minChunks: 2,
+          priority: -10
+        },
         vendors: {
           test:  /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all',
+          chunks: 'all',//可选initial async all,all=inintial+async,initial会提取所有的同步加载的公共模块，而async会提取异步引入的模块中的公共木模块
+          priority: -20
         },
-        utils: {
-          test: /[\\/]util[\\/]/,
-          name: 'utils',
-          chunks: 'initial',
-          minSize: 0
-        }
-      }
+      },
     },
     // runtimeChunk: true,
     minimizer: [

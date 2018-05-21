@@ -1,4 +1,6 @@
 import $ from 'jquery'
+import {sayUtil} from "../../util/util"
+
 const p2 = new Promise((resolve, reject) => {
   resolve('index')
   console.log('has resolved')
