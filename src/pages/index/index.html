@@ -3,10 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=750, user-scalable=no">
-  <title>首页</title>
+  <title>我录了一段有点特别的视频，点开看看？</title>
 </head>
 <body>
-<div class="red">hello world</div>
-<img src="../../imgs/step1-5.png" alt="">
+<div id="app">
+  <div class="page-container" ref="ScrollContainer">
+    <div class="page-content">
+      <!--视频创建者的所有信息-->
+      <div class="creater" v-if="Object.keys(works).length > 0">
+        <img class="creater-bg" src="../../imgs/icon-1-7.jpg">
+        <div class="creater-c">
+          <div class="video-a">
+            <video class="video"
+                   :class="{'full-screen': isFullScreen}"
+                   :src="works.movie.waterMarkUrl || works.movie.url"
+                   :poster="works.worksPic.url"
+                   x5-video-player-type="h5"
+                   x5-playsinline="true"
+                   playsinline
+                   webkit-playsinline="true"
+                   ref="BalalaVideo"
+                   preload
+                   @ended="videoEndHandler"
+                   @waiting="waitingHandler"
+                   @playing="playingHandler"
+                   @x5videoexitfullscreen="exitHandler"
+                   @x5videoenterfullscreen="enterHandler"
+                   @click="controlVideo">
+            </video>
+            <img class="play-icon" src="../../imgs/icon-1-1.png" v-cloak v-show="showPlayIcon" @click="controlVideo">
+            <img class="loading" src="../../imgs/loading.gif" v-cloak v-show="videoLoading">
+          </div>
+          <div class="infos">
+            <div class="info info-1" @click="goToUserCenter(-1)">
+              <img class="avator" :src="works.user.headUrl | formatImg">
+              <span v-cloak>{{works.user.nickName}}</span>
+            </div>
+            <div class="info info-3">
+              <img src="../../imgs/icon-1-5.png" alt="">
+              <span v-cloak>{{works.replyCount}}</span>
+            </div>
+            <div class="info info-2">
+              <img src="../../imgs/icon-1-2.png" alt="">
+              <span v-cloak>{{works.watchCount}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--填写评论、点赞区域-->
+      <div class="operation clearfix" v-if="Object.keys(works).length > 0" v-cloak>
+        <textarea
+          class="input-radius"
+          maxlength="120"
+          placeholder="说说你的看法"
+          v-model="commentText"
+          :class="{active: showActiveClass}"
+          @focus="changeHeight(true)">
+        </textarea>
+        <div class="publish"
+             v-show="showActiveClass"
+             @click="publishComment">发表</div>
+        <div class="star" @click.once="showLike">
+          <img src="../../imgs/icon-1-9.png" v-if="!isLike" v-cloak>
+          <img src="../../imgs/icon-1-10.png" v-cloak v-else>
+          <span v-cloak>{{works.likeCount}}</span>
+        </div>
+        <div class="tip-panel" v-if="showTipPanel" v-cloak>{{tipContent}}</div>
+      </div>
+
+      <!--评论列表区域-->
+      <div class="comments" v-if="commentList.length > 0">
+        <ul>
+          <li class="comment" v-for="(comment, index) in commentList" :key="comment.user.id">
+            <div class="content-r">
+              <div class="content-t clearfix">
+                <div class="nickname" v-cloak>{{comment.user.nickName}}</div>
+                <div class="post-time">
+                  <img src="../../imgs/icon-1-4.png" alt="">
+                  <span v-cloak>{{comment.replyTime}}</span>
+                </div>
+              </div>
+              <div class="content-b" v-cloak>{{comment.content}}</div>
+            </div>
+            <div class="avator">
+              <img :src="comment.user.headUrl | formatImg" @click="goToUserCenter(index)">
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!--广告区域-->
+  <div class="ad" v-if="showFixBottom" v-cloak >
+    <div class="download" @click="linkToAppStore('get')"></div>
+    <div class="close" @click="closeFixBottom"></div>
+  </div>
+
+  <!--评论成功，点赞成功-->
+  <div v-if="maskType" class="mask" v-cloak @touchmove.prevent>
+    <div class="main">
+      <img v-if="maskType==='like'" src="../../imgs/icon-1-12.png" alt="">
+      <img v-if="maskType==='comment'" src="../../imgs/icon-1-13.png" alt="">
+      <div class="download" @click="linkToAppStore(maskType)"></div>
+      <div class="close" @click="closeMask"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

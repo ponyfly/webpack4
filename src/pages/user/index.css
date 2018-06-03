@@ -1,0 +1,42 @@
+@import "../../common/reset.min.css";
+/*common*/
+[v-cloak]{display: none}
+img{ border:none;}
+.vertcial:after { content: "";display: inline-block;height:100%;vertical-align: middle; }
+#app{ width:750px; height:100%; margin:0 auto;background: #fff}
+#app .page-container{ width:100%; height:100%;overflow: visible}
+#app .page-container .page-content{ width:100%; min-height:calc(100% + 1px)}
+
+/*用户基本信息*/
+#app .userinfo .t{ padding:30px;}
+#app .userinfo .t .avator{float: left; width:150px; height:150px;border-radius: 75px}
+#app .userinfo .t .follow{float: right;margin-top:36px;width:176px; height:78px; background-color: #ff1652;border-radius: 39px;font-size: 32px;line-height:78px;text-align: center;color: #fff}
+#app .userinfo .b{margin:0 30px;box-sizing: border-box; padding-bottom:30px; border-bottom:1px dotted #363636;}
+#app .userinfo .r{}
+#app .userinfo .b .l{float:left; height:100%;line-height: 60px}
+#app .userinfo .b .r{float:right;height:100%;line-height: 60px}
+#app .userinfo .b .l .icon-bg{position: relative; top:-4px;display:inline-block; width:30px; height:30px; background-color: #f73a1d;border-radius: 15px;text-align: center;line-height: 1}
+#app .userinfo .b .l .nickname{font-size: 42px;font-weight: bold; color: #363636;}
+#app .userinfo .b .l .icon-bg img{ width:14px; height:21px;}
+#app .userinfo .b .r img{width:34px; height:27px;vertical-align: middle}
+#app .userinfo .b .r span{width:34px; height:27px; color: #333;font-size: 24px;}
+#app .userinfo .main-2 {padding: 0 30px}
+#app .userinfo .main-2 p { line-height:40px;font-size: 26px; color: #666666; margin:30px 0;}
+#app .userinfo .main-2 div {font-size: 42px;font-weight: bold;padding-bottom: 30px}
+#app .userinfo .main-2 div span{font-size: 28px; color: #363636;margin-right: 56px}
+
+/*列表区域*/
+#app .videolists{border-top: 1px solid #e5e5e5; background-color: #fafafa;}
+#app .videolists .tab{ width:100%; height:86px; color: #363636;font-size: 32px;}
+#app .videolists .tab div{float: left; width:50%; height:86px;text-align: center;line-height: 86px}
+#app .videolists .tab div .inner{border-bottom: 4px solid transparent}
+#app .videolists .tab div .inner.active { color: #ff1652;border-bottom: 4px solid #ff1652}
+#app .videos-container { padding:9px 0 0 9px; color: #fff;}
+#app .videos-container .videos-contents {}
+#app .videos-container .videos-contents .video-item{position: relative;float: left; width:237px; height:317px; margin:0 9px 9px 0; background-color: #000;border-radius: 10px}
+#app .videos-container .videos-contents .video-item .poster{display: block; width:100%; height:100%; border-radius: 10px}
+#app .videos-container .videos-contents .video-item .video-infos{ position: absolute;bottom: 0; left:0; width:100%; height:54px; padding:0 15px;}
+#app .videos-container .videos-contents .video-item .video-infos img{ position: relative; top:-2px;}
+#app .videos-container .videos-contents .video-item .video-infos .plays{float: left;height: 100%;line-height: 54px}
+#app .videos-container .videos-contents .video-item .video-infos .star{ float: right;height: 100%;line-height: 54px}
+

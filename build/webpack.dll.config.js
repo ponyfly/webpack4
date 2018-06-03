@@ -5,7 +5,7 @@ const CleanPlugin = require('clean-webpack-plugin')
 module.exports = {
   mode: 'production',
   entry: {
-    vendor: ['jquery']
+    vendor: ['vue', 'better-scroll', 'axios']
   },
   output: {
     path: path.resolve(__dirname, '..' , 'dist'),

@@ -8,7 +8,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
-const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const chalk = require('chalk')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
 const merge = require('webpack-merge')
@@ -24,7 +23,7 @@ function getEntryHtml() {
     entryHtmls.push(new HtmlPlugin({
       template: entries[name],
       filename:`${name}.html`,
-      chunks: [name, 'vendors', 'utils']
+      chunks: ['manifest', 'vendor', 'common', name]
     }))
   })
   return entryHtmls
@@ -64,20 +63,24 @@ module.exports = merge(base, {
     splitChunks: {
       cacheGroups: {
         common: {
-          name: 'common',
-          chunks:'initial',
           minChunks: 2,
-          priority: -10
+          chunks: 'initial',
+          name: 'common',
+          maxInitialRequests: 5,
+          minSize: 0
         },
-        vendors: {
-          test:  /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',//可选initial async all,all=inintial+async,initial会提取所有的同步加载的公共模块，而async会提取异步引入的模块中的公共木模块
-          priority: -20
-        },
+        vendor: {
+          test: /node_modules/,
+          chunks: 'initial',
+          name: 'vendor',
+          priority: 10,
+          enforce: true
+        }
       },
     },
-    // runtimeChunk: true,
+    runtimeChunk: {
+      name: 'manifest'
+    },
     minimizer: [
       new OptimizeCSSAssetsPlugin({})
     ]
@@ -89,12 +92,12 @@ module.exports = merge(base, {
     }),
     new webpack.HashedModuleIdsPlugin(),
     ...getEntryHtml(),
-    // new HtmlWebpackIncludeAssetsPlugin({
-    //   assets: [
-    //     'dll/vendor.dll.js'
-    //   ],
-    //   append: false
-    // }),
+    new HtmlWebpackIncludeAssetsPlugin({
+      assets: [
+        'dll/vendor.dll.js'
+      ],
+      append: false
+    }),
     new MiniCssExtractPlugin({
       filename: "css/[name].[contenthash:6].css",
     }),
@@ -118,11 +121,8 @@ module.exports = merge(base, {
         }
       }
     }),
-    // new webpack.DllReferencePlugin({
-    //   manifest: utils.absolutePath('dist/dll/vendor.manifest.json')
-    // }),
-    new ProgressBarPlugin({
-      format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)'
+    new webpack.DllReferencePlugin({
+      manifest: utils.absolutePath('dist/dll/vendor.manifest.json')
     })
   ]
 })
