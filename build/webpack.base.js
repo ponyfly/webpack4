@@ -3,7 +3,10 @@ const utils = require('./utils')
 module.exports = {
   entry: utils.getEntries('src/pages/*/index.js'),
   resolve: {
-    extensions: ['.js']
+    extensions: ['.js'],
+    alias: {
+      vue: 'vue/dist/vue.min.js'
+    }
   },
   module: {
     rules: [

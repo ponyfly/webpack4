@@ -4,6 +4,12 @@ const CleanPlugin = require('clean-webpack-plugin')
 
 module.exports = {
   mode: 'production',
+  resolve: {
+    extensions: ['.js'],
+    alias: {
+      vue: 'vue/dist/vue.min.js'
+    }
+  },
   entry: {
     vendor: ['vue', 'better-scroll', 'axios']
   },

@@ -7,7 +7,6 @@ import defaultHeadUrl from '../../imgs/default-avator.png'
 const vm = new Vue({
   el: "#app",
   data: {
-
     showPlayIcon: true,
     showFixBottom: true,
     showActiveClass: false,
