@@ -7,7 +7,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
-const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
 const merge = require('webpack-merge')
 
 const base = require('./webpack.base')
@@ -64,7 +63,6 @@ module.exports = merge(base, {
           minChunks: 2,
           chunks: 'initial',
           name: 'common',
-          maxInitialRequests: 5,
           minSize: 0
         },
         vendor: {
@@ -85,17 +83,10 @@ module.exports = merge(base, {
   },
   plugins: [
     new CleanPlugin(['dist'],{
-      root: utils.absolutePath(),
-      exclude: ['dll']
+      root: utils.absolutePath()
     }),
     new webpack.HashedModuleIdsPlugin(),
     ...getEntryHtml(),
-    new HtmlWebpackIncludeAssetsPlugin({
-      assets: [
-        'dll/vendor.dll.js'
-      ],
-      append: false
-    }),
     new MiniCssExtractPlugin({
       filename: "css/[name].[contenthash:6].css",
     }),
@@ -118,9 +109,6 @@ module.exports = merge(base, {
           reduce_vars: true // 提取出出现多次但是没有定义成变量去引用的静态值
         }
       }
-    }),
-    new webpack.DllReferencePlugin({
-      manifest: utils.absolutePath('dist/dll/vendor.manifest.json')
     })
   ]
 })
