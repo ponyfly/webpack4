@@ -7,7 +7,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
-const chalk = require('chalk')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
 const merge = require('webpack-merge')
 
@@ -29,7 +28,7 @@ function getEntryHtml() {
 }
 
 module.exports = merge(base, {
-  mode: 'development',
+  mode: 'production',
   output: {
     path: utils.absolutePath('dist'),
     filename: "js/[name].[chunkhash:6].js",
