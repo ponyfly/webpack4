@@ -50,14 +50,6 @@ const vm = new Vue({
           })
         })
     },
-    toggleList(worksType) {
-      if(this.worksType === worksType) return
-      this.worksType = worksType
-      this.nextPageRecord = ''
-      this.lastPostY = 0
-      this.itemList = []
-      this._getPersonalNewsList()
-    },
     _initScroll(){
       if(!this.scroll) {
         this.scroll = new BScroll(this.$refs.scrollContainer,{

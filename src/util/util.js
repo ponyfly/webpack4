@@ -1,22 +1,7 @@
 import axios from 'axios'
-const debug = 1
-const urlOrigin = debug ? 'https://snaptest.j.cn' : 'https://snap.j.cn'
-let apis = {
-  worksShareDetail: urlOrigin + '/api/worksShareDetail',
-  replyList: urlOrigin + '/api/replyList',
-  sendReply: urlOrigin + '/api/sendReply',
-  personalNewsList: urlOrigin + '/api/personalNewsList',
-  getNewestUserId: urlOrigin + '/api/getNewestUserId',
-  attentionOn: urlOrigin + '/api/attentionOn',
-  fetchWechatUserInfo: urlOrigin + '/api/fetchWechatUserInfo',
-  fetchQQUserInfo: urlOrigin + '/api/fetchQQUserInfo',
-}
 class Tools {
 
-  constructor(apis) {
-    this.apis = apis
-    this.channel = 'balalatest'
-  }
+  constructor() {}
 
   /**
    * 获取连接参数
@@ -241,5 +226,21 @@ class Tools {
     return o
   }
 }
-const TOOLS = new Tools(apis)
+const TOOLS = new Tools()
+const debug = TOOLS._GetQueryString('env') === 'pro' ? 0 : 1
+const urlOrigin = debug ? 'https://snaptest.j.cn' : 'https://snap.j.cn'
+const apis = {
+  worksShareDetail: urlOrigin + '/api/worksShareDetail',
+  replyList: urlOrigin + '/api/replyList',
+  sendReply: urlOrigin + '/api/sendReply',
+  personalNewsList: urlOrigin + '/api/personalNewsList',
+  getNewestUserId: urlOrigin + '/api/getNewestUserId',
+  attentionOn: urlOrigin + '/api/attentionOn',
+  fetchWechatUserInfo: urlOrigin + '/api/fetchWechatUserInfo',
+  fetchQQUserInfo: urlOrigin + '/api/fetchQQUserInfo',
+  commonStats: urlOrigin + '/api/commonStats',
+}
+const channel = debug ? 'balalatest' : 'balala'
+TOOLS.apis = apis
+TOOLS.channel = channel
 export default TOOLS

@@ -1,4 +1,3 @@
-const glob = require('glob')
 const HappyPack = require('happypack')
 const os = require('os')
 const webpack = require('webpack')
@@ -30,7 +29,7 @@ function getEntryHtml() {
 }
 
 module.exports = merge(base, {
-  mode: 'production',
+  mode: 'development',
   output: {
     path: utils.absolutePath('dist'),
     filename: "js/[name].[chunkhash:6].js",

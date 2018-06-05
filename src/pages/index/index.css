@@ -2,9 +2,9 @@
 /*common*/
 [v-cloak]{display: none}
 img{ border:none;}
-#app{ width:750px; height:100%; margin:0 auto;background: #fff}
-#app .page-container{ width:100%; height:100%;overflow: visible}
-#app .page-container .page-content{ width:100%; min-height:calc(100% + 1px)}
+#app{ width:750px; height:100%; margin:0 auto;background: #fff;overflow: scroll}
+#app .page-container{ width:100%;}
+#app .page-container .page-content{ width:100%;}
 /*creater样式*/
 #app .creater{ position: relative; height:823px;overflow:hidden;}
 #app .creater .creater-bg {display: block; width:100%;}
@@ -13,7 +13,7 @@ img{ border:none;}
 #app .creater .creater-c .video-a .play-icon{ position: absolute; top:0; right:0; bottom: 0; left:0;z-index: 999; margin:auto;width:102px; height:104px;}
 #app .creater .creater-c .video-a .loading{ position: absolute; top:50%; left:50%;z-index: 999; margin:-25px 0 0 -25px;width:50px; height:50px;}
 #app .creater .creater-c .video-a .full-icon{ position: absolute; bottom:16px; right:200px;z-index: 999; width:48px; height:48px;}
-#app .creater .creater-c .video-a .video{ position: absolute;left: 0;bottom: 0;width: 400px;top: 0;right: 0;margin: auto;}
+#app .creater .creater-c .video-a .video{ position: absolute;left: 0;bottom: 0;width: 400px; height:720px;top: 0;right: 0;margin: auto; background-color: #000;}
 #app .creater .creater-c .infos{width:100%;height:96px; padding:0 40px; color: #fff;}
 #app .creater .creater-c .infos .info { height:100%;line-height: 96px}
 #app .creater .creater-c .infos .info:first-of-type{ float: left;color: #fff; font-size: 26px}
@@ -23,10 +23,16 @@ img{ border:none;}
 #app .creater .creater-c .infos .info-1 .avator{ width:44px;height:44px;border-radius: 22px}
 #app .creater .creater-c .infos .info span{vertical-align: middle; }
 .info:after {content: "";display: inline-block;height:100%;vertical-align: middle; }
+/*全屏播放样式*/
+#app .creater.full-screen-creater{overflow:visible;}
+#app .creater .creater-c .video-a.full-screen-videoa{ height:100vh;}
 #app .creater .creater-c .video-a .full-screen{ width:100%;}
+#app .operation.full-screen-operation{display: none}
+#app .comments.full-screen-comments{display: none}
 
 /*填写评论、点赞区域*/
-#app .operation { padding:25px 40px; position: relative;}
+#app .operation { padding:25px 40px; position: relative;background-color: #fff;}
+#app .operation.fixed-bottom{position: fixed; bottom:0;z-index: 999}
 #app .operation .input-radius{float: left;width: 530px; height: 78px;border-radius: 39px; border:1px solid #b9b8b8;background-color:#eaeaea;line-height: 50px;font-size: 30px; color: #575757; padding:13px 35px;outline: none}
 #app .operation .star{float: right; width:118px; padding:11px 0; background-color: #f6f3f3;border-radius: 39px;}
 #app .operation .star img{display: block; width:40px; height:35px; margin:0 auto;}
@@ -45,7 +51,7 @@ img{ border:none;}
 #app .comments ul .comment .avator img{ width:74px; height:74px;border-radius: 37px;}
 #app .comments ul .comment .content-r{width:100%;padding-left: 102px;}
 #app .comments ul .comment .content-r .content-t{line-height: 30px; padding:20px 0 12px;}
-#app .comments ul .comment .content-r .content-b{font-size: 32px; color: #101010;line-height: 40px;padding-bottom: 20px; border-bottom:1px solid #d2d2d2;text-align: justify}
+#app .comments ul .comment .content-r .content-b{font-size: 32px; color: #101010;line-height: 40px;padding-bottom: 20px; border-bottom:1px solid #d2d2d2;text-align: justify;word-wrap: break-word}
 #app .comments ul .comment .content-r .content-t .nickname{float: left;font-size: 26px; color: #666666;}
 #app .comments ul .comment .content-r .content-t .post-time{float: right; width:120px;}
 #app .comments ul .comment .content-r .content-t .post-time img{ width:18px; height:18px;}

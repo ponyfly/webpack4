@@ -35,11 +35,8 @@
       </div>
       <div class="videolists">
         <div class="tab">
-          <div class="product-header" @click="toggleList(0)">
-            <span class="inner" :class="{active:worksType === 0}" v-cloak>作品 {{personalInfos.worksCount}}</span>
-          </div>
-          <div class="like-header" @click="toggleList(1)">
-            <span class="inner" :class="{active:worksType === 1}" v-cloak>喜欢 {{personalInfos.likeWorksCount}}</span>
+          <div class="product-header">
+            <span class="inner active" v-cloak>作品 {{personalInfos.worksCount}}</span>
           </div>
         </div>
         <div class="videos-container" v-if="itemList.length > 0" v-cloak>

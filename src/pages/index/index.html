@@ -7,13 +7,16 @@
 </head>
 <body>
 <div id="app">
-  <div class="page-container" ref="ScrollContainer">
+  <div class="page-container"
+       ref="ScrollContainer"
+       @touchstart="touchStart($event)"
+       @touchend="touchEnd($event)">
     <div class="page-content">
       <!--视频创建者的所有信息-->
-      <div class="creater" v-if="Object.keys(works).length > 0">
+      <div class="creater" :class="{'full-screen-creater' : isFullScreen}" v-if="Object.keys(works).length > 0">
         <img class="creater-bg" src="../../imgs/icon-1-7.jpg">
         <div class="creater-c">
-          <div class="video-a">
+          <div class="video-a" :class="{'full-screen-videoa' : isFullScreen}">
             <video class="video"
                    :class="{'full-screen': isFullScreen}"
                    :src="works.movie.waterMarkUrl || works.movie.url"
@@ -52,28 +55,32 @@
       </div>
 
       <!--填写评论、点赞区域-->
-      <div class="operation clearfix" v-if="Object.keys(works).length > 0" v-cloak>
+      <div class="operation clearfix" :class="{'full-screen-operation': isFullScreen, 'fixed-bottom': showActiveClass && runningEnv.android && (runningEnv.qq || runningEnv.weixin)}" v-if="Object.keys(works).length > 0" v-cloak>
         <textarea
-          class="input-radius"
-          maxlength="120"
-          placeholder="说说你的看法"
-          v-model="commentText"
-          :class="{active: showActiveClass}"
-          @focus="changeHeight(true)">
+            class="input-radius"
+            maxlength="120"
+            placeholder="说说你的看法"
+            v-model="commentText"
+            :class="{active: showActiveClass}"
+            @focus="changeHeight"
+            @blur="blurHandler"
+            ref="textArea"
+            data-a="评论">
         </textarea>
-        <div class="publish"
-             v-show="showActiveClass"
-             @click="publishComment">发表</div>
-        <div class="star" @click.once="showLike">
-          <img src="../../imgs/icon-1-9.png" v-if="!isLike" v-cloak>
-          <img src="../../imgs/icon-1-10.png" v-cloak v-else>
-          <span v-cloak>{{works.likeCount}}</span>
-        </div>
-        <div class="tip-panel" v-if="showTipPanel" v-cloak>{{tipContent}}</div>
+      <div class="publish"
+           v-show="showActiveClass"
+           @click="publishComment"
+           data-a="发表">发表</div>
+      <div class="star" @click.once="showLike" data-a="喜欢">
+        <img src="../../imgs/icon-1-9.png" v-if="!works.hasAttention" v-cloak data-a="喜欢">
+        <img src="../../imgs/icon-1-10.png" v-cloak v-else data-a="喜欢">
+        <span v-cloak data-a="喜欢">{{works.likeCount}}</span>
       </div>
+      <div class="tip-panel" v-if="showTipPanel" v-cloak>{{tipContent}}</div>
+    </div>
 
       <!--评论列表区域-->
-      <div class="comments" v-if="commentList.length > 0">
+      <div class="comments" :class="{'full-screen-comments': isFullScreen}" v-if="commentList.length > 0">
         <ul>
           <li class="comment" v-for="(comment, index) in commentList" :key="comment.user.id">
             <div class="content-r">
@@ -95,8 +102,8 @@
     </div>
   </div>
   <!--广告区域-->
-  <div class="ad" v-if="showFixBottom" v-cloak >
-    <div class="download" @click="linkToAppStore('get')"></div>
+  <div class="ad" v-if="showFixBottom">
+    <div class="download" @click="linkToAppStore"></div>
     <div class="close" @click="closeFixBottom"></div>
   </div>
 
