@@ -8,6 +8,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const merge = require('webpack-merge')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const base = require('./webpack.base')
 const utils = require('./utils')
@@ -20,7 +21,7 @@ function getEntryHtml() {
     entryHtmls.push(new HtmlPlugin({
       template: entries[name],
       filename:`${name}.html`,
-      chunks: ['manifest', 'vendor', 'common', name]
+      chunks: ['manifest', 'vendor', name + '-vendor', name]
     }))
   })
   return entryHtmls
@@ -58,20 +59,58 @@ module.exports = merge(base, {
   },
   optimization: {
     splitChunks: {
+      chunks: "all",
       cacheGroups: {
-        common: {
-          minChunks: 2,
-          chunks: 'initial',
-          name: 'common',
-          minSize: 0
-        },
+        // common: {
+        //   minChunks: 2,
+        //   chunks: 'initial',
+        //   name: 'common',
+        //   minSize: 0
+        // },
         vendor: {
           test: /node_modules/,
           chunks: 'initial',
           name: 'vendor',
           priority: 10,
-          enforce: true
-        }
+          enforce: true,
+          minChunks: 2,
+        },
+        "home-vendor": {
+          test: module => {
+            for (const chunk of module.chunksIterable) {
+              if (chunk.name && /home/.test(chunk.name)) {
+                if (module.nameForCondition() && /[\\/]node_modules[\\/]/.test(module.nameForCondition())) {
+                  return true;
+                }
+              }
+            }
+            return false;
+          },
+          minChunks: 1,
+          name: 'home-vendor',
+          chunks(chunk) {
+            return chunk.name === 'home';
+          },
+          priority: 5,
+        },
+        "user-vendor": {
+          test: module => {
+            for (const chunk of module.chunksIterable) {
+              if (chunk.name && /user/.test(chunk.name)) {
+                if (module.nameForCondition() && /[\\/]node_modules[\\/]/.test(module.nameForCondition())) {
+                  return true;
+                }
+              }
+            }
+            return false;
+          },
+          minChunks: 1,
+          name: 'user-vendor',
+          chunks(chunk) {
+            return chunk.name === 'user';
+          },
+          priority: 5,
+        },
       },
     },
     runtimeChunk: {
@@ -109,6 +148,7 @@ module.exports = merge(base, {
           reduce_vars: true // 提取出出现多次但是没有定义成变量去引用的静态值
         }
       }
-    })
+    }),
+    new BundleAnalyzerPlugin()
   ]
 })

@@ -1,6 +1,7 @@
 require('./index.css')
 import Vue from 'vue'
 import TOOLS from '../../util/util'
+import $ from 'jquery'
 import defaultHeadUrl from '../../imgs/default-avator.png'
 
 const vm = new Vue({
