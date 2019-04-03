@@ -20,7 +20,8 @@ function getEntryHtml() {
     entryHtmls.push(new HtmlPlugin({
       template: entries[name],
       filename:`${name}.html`,
-      chunks: ['manifest', 'vendor', 'common', name]
+      // chunks: ['manifest', 'vendor', 'common', name]
+      chunksSortMode: 'dependency'
     }))
   })
   return entryHtmls
@@ -57,35 +58,33 @@ module.exports = merge(base, {
     ]
   },
   optimization: {
+    minimize: false,
     splitChunks: {
+      chunks: "all",
+      minSize: 30,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: '~',
+      name: true,
       cacheGroups: {
-        common: {
-          minChunks: 2,
-          chunks: 'initial',
-          name: 'common',
-          minSize: 0
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
         },
-        vendor: {
-          test: /node_modules/,
-          chunks: 'initial',
-          name: 'vendor',
-          priority: 10,
-          enforce: true
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
         }
-      },
-    },
-    runtimeChunk: {
-      name: 'manifest'
-    },
-    minimizer: [
-      new OptimizeCSSAssetsPlugin({})
-    ]
+      }
+    }
   },
   plugins: [
     new CleanPlugin(['dist'],{
       root: utils.absolutePath()
     }),
-    new webpack.HashedModuleIdsPlugin(),
+    // new webpack.HashedModuleIdsPlugin(),
     ...getEntryHtml(),
     new MiniCssExtractPlugin({
       filename: "css/[name].[contenthash:6].css",
