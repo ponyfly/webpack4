@@ -60,7 +60,9 @@ module.exports = merge(base, {
   optimization: {
     minimize: false,
     splitChunks: {
-      chunks: "all",
+      chunks: (chunk) => {
+        return chunk.name !== 'index'
+      },
       minSize: 30,
       minChunks: 1,
       maxAsyncRequests: 5,
